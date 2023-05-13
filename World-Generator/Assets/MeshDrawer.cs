@@ -6,18 +6,20 @@ using UnityEngine;
 public class MeshDrawer : MonoBehaviour
 {
     [SerializeField] private MeshFilter meshFilter;
+    // [SerializeField] private float spacing;
     [SerializeField] private int density;
     [SerializeField] private int area;
     [SerializeField] private Color[] gizmosColors;
 
-    private Mesh mesh;
-    private Vector3[,] pointsMatriz;
-    private List<Edge> edges = new List<Edge>();
     private int verticesCount;
+    private Mesh mesh;
+    private List<Edge> edges = new List<Edge>();
+    private List<Vector3> debugVertices = new List<Vector3>();
 
     private void Start()
     {
         mesh = new Mesh();
+        mesh.Clear();
         meshFilter.mesh = mesh;
 
         Vector3[] vertices = GenerateVertices();
@@ -26,32 +28,18 @@ public class MeshDrawer : MonoBehaviour
         // GenerateTriangles(vertices);
     }
 
-    private void GenerateVerticesVisualization()
-    {
-        pointsMatriz = new Vector3[area * density, area * density];
-        float spacing = area / density;
-        for (int i = 0; i < area * density; i++)
-        {
-            for (int j = 0; j < area * density; j++)
-            {
-                Vector3 pos = new Vector3(i * spacing, 0, j * spacing);
-                pointsMatriz[i, j] = pos;
-            }
-        }
-    }
-
     private Vector3[] GenerateVertices()
     {
-        GenerateVerticesVisualization();
         List<Vector3> vertices = new List<Vector3>();
-        verticesCount = area * area * density;
-        float spacing = area / density;
-        for (int i = 0; i < area * density; i++)
+        verticesCount = density * density;
+        float spacing = (float)area / (float)density;
+        for (int i = 0; i < density; i++)
         {
-            for (int j = 0; j < area * density; j++)
+            for (int j = 0; j < density; j++)
             {
                 Vector3 pos = new Vector3(i * spacing, 0, j * spacing);
                 vertices.Add(pos);
+                debugVertices.Add(pos);
             }
         }
         return vertices.ToArray();
@@ -60,13 +48,12 @@ public class MeshDrawer : MonoBehaviour
     private int[] GenerateTriangles(Vector3[] points)
     {
         List<int> newTriangles = new List<int>();
-        for (int i = 0; i < 100; i++)
+        // int trianglesCount = 
+        Debug.Log(verticesCount);
+        for (int i = 0; i < verticesCount - density; i++)
         {
             if (i % Mathf.Sqrt(verticesCount) < Mathf.Sqrt(verticesCount) - 1)
             {
-                if (!(i % Mathf.Sqrt(verticesCount) < Mathf.Sqrt(verticesCount) - 1))
-                    Debug.Log($"{i % Mathf.Sqrt(verticesCount)} < {Mathf.Sqrt(verticesCount)}");
-
                 //Curent Vertex
                 newTriangles.Add(i);
                 //Right Vertex
@@ -75,11 +62,11 @@ public class MeshDrawer : MonoBehaviour
                 newTriangles.Add(i + (int)Mathf.Sqrt(verticesCount));
 
                 //Current to right
-                // edges.Add(new Edge(points[i], points[i + 1]));
+                edges.Add(new Edge(points[i], points[i + 1]));
                 //Current to down
-                // edges.Add(new Edge(points[i], points[i + (int)Mathf.Sqrt(verticesCount)]));
+                edges.Add(new Edge(points[i], points[i + (int)Mathf.Sqrt(verticesCount)]));
                 //Right to down
-                // edges.Add(new Edge(points[i + 1], points[i + (int)Mathf.Sqrt(verticesCount)]));
+                edges.Add(new Edge(points[i + 1], points[i + (int)Mathf.Sqrt(verticesCount)]));
 
                 if (i > 0 && i % Mathf.Sqrt(verticesCount) > 0)
                 {
@@ -101,10 +88,10 @@ public class MeshDrawer : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        if (pointsMatriz == null)
+        if (debugVertices == null)
             return;
 
-        foreach (Vector3 vertice in pointsMatriz)
+        foreach (Vector3 vertice in debugVertices)
         {
             Gizmos.DrawSphere(vertice, 0.5f);
         }
