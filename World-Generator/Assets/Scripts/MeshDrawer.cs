@@ -1,33 +1,54 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class MeshDrawer : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private MeshFilter meshFilter;
-    // [SerializeField] private float spacing;
+    [SerializeField] private Noise noiseFunction;
+
+    [Header("Values")]
     [SerializeField] private int density;
     [SerializeField] private int area;
-    [SerializeField] private Color[] gizmosColors;
 
-    private Mesh mesh;
+    [Header("Debug")]
+    [SerializeField] private bool drawGizmos;
+    [SerializeField] private Color verticeColor;
+    [SerializeField] private float verticeSize;
+    [SerializeField] private Color edgeColor;
     private List<Edge> edges = new List<Edge>();
     private List<Vector3> debugVertices = new List<Vector3>();
 
-    private void Start()
+    private Mesh mesh;
+
+    [Button]
+    public void ClearMesh()
     {
         mesh = new Mesh();
         mesh.Clear();
         meshFilter.mesh = mesh;
 
-        Vector3[] vertices = GenerateVertices();
+        debugVertices = new List<Vector3>();
+        edges = new List<Edge>();
+    }
+
+    [Button]
+    public void GenerateMesh()
+    {
+        ClearMesh();
+        
+        float[,] noiseValues = noiseFunction.GenerateNoise(density, density);
+
+        Vector3[] vertices = GenerateVertices(noiseValues);
         mesh.vertices = vertices;
         mesh.triangles = GenerateTriangles(vertices);
         mesh.uv = GenerateUv();
     }
 
-    private Vector3[] GenerateVertices()
+    private Vector3[] GenerateVertices(float[,] noise)
     {
         List<Vector3> vertices = new List<Vector3>();
         float spacing = (float)area / (float)density;
@@ -35,7 +56,7 @@ public class MeshDrawer : MonoBehaviour
         {
             for (int j = 0; j < density; j++)
             {
-                Vector3 pos = new Vector3(i * spacing, 0, j * spacing);
+                Vector3 pos = new Vector3(i * spacing, noise[i,j], j * spacing);
                 vertices.Add(pos);
                 debugVertices.Add(pos);
             }
@@ -96,21 +117,26 @@ public class MeshDrawer : MonoBehaviour
         return newTriangles.ToArray();
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
+        if (!drawGizmos)
+            return;
+
         Gizmos.color = Color.white;
         if (debugVertices == null)
             return;
 
-        foreach (Vector3 vertice in debugVertices)
-        {
-            Gizmos.DrawSphere(vertice, 0.5f);
-        }
-
         for (int i = 0; i < edges.Count; i++)
         {
-            Gizmos.color = gizmosColors[i % gizmosColors.Length];
+            // Gizmos.color = gizmosColors[i % gizmosColors.Length];
+            Gizmos.color = edgeColor;
             Gizmos.DrawLine(edges[i].start, edges[i].end);
+        }
+
+        foreach (Vector3 vertice in debugVertices)
+        {
+            Gizmos.color = verticeColor;
+            Gizmos.DrawSphere(vertice, verticeSize);
         }
     }
 }
