@@ -13,14 +13,15 @@ public class TerrainGenerator : MonoBehaviour
     [Header("Values")]
     [SerializeField] private int chunkSize;
     [Range(0, 5)][SerializeField] private float waterlevel;
+    [Range(0, 5)][SerializeField] private int LODLevel;
 
-    [Header("Debug")]
-    [OnValueChanged("UpdateGizmos")][SerializeField] private bool drawGizmos;
-    [SerializeField] private MeshDrawer meshGizmo;
+    // [Header("Debug")]
+    // [OnValueChanged("UpdateGizmos")][SerializeField] private bool drawGizmos;
+    // [SerializeField] private MeshDrawer meshGizmo;
 
     private MeshDrawer instantiatedMeshGizmo;
-    private MeshInfo terrainMeshInfo;
-    private MeshInfo waterMeshInfo;
+    private MeshData terrainMeshData;
+    private MeshData waterMeshData;
 
     private GameObject terrain;
     private GameObject water;
@@ -39,13 +40,13 @@ public class TerrainGenerator : MonoBehaviour
             water = null;
         }
 
-        terrainMeshInfo = new MeshInfo();
-        waterMeshInfo = new MeshInfo();
+        terrainMeshData = new MeshData();
+        waterMeshData = new MeshData();
 
         terrain = GenerateTerrain();
         water = GenerateWater(terrain);
 
-        UpdateGizmos();
+        // UpdateGizmos();
     }
 
     private GameObject GenerateTerrain()
@@ -56,10 +57,16 @@ public class TerrainGenerator : MonoBehaviour
 
         float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize);
 
-        terrainMeshFilter.sharedMesh = MeshGenerator.GenerateMesh(noiseValues, chunkSize, out terrainMeshInfo);
+        terrainMeshData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
+        Mesh mesh = new Mesh();
+        mesh.vertices = terrainMeshData.vertices;
+        mesh.triangles = terrainMeshData.triangles;
+        mesh.uv = terrainMeshData.uv;
+
+        terrainMeshFilter.mesh = mesh;
 
         Material mat = new Material(terrainShader);
-        mat.SetTexture("_MainTexture", TextureCreator.GenerateTexture(noiseValues, gradient, chunkSize));
+        mat.SetTexture("_MainTexture", TextureCreator.GenerateTexture(noiseValues, gradient, waterlevel, chunkSize));
         terrainRenderer.sharedMaterial = mat;
 
         return terrain;
@@ -70,7 +77,15 @@ public class TerrainGenerator : MonoBehaviour
         water.transform.position = new Vector3(terrain.transform.position.x, waterlevel, terrain.transform.position.z);
         MeshRenderer waterMeshRenderer = water.AddComponent<MeshRenderer>();
         MeshFilter waterMeshFilter = water.AddComponent<MeshFilter>();
-        waterMeshFilter.mesh = MeshGenerator.GenerateWater(chunkSize, out waterMeshInfo);
+
+        waterMeshData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
+        Mesh mesh = new Mesh();
+        mesh.vertices = waterMeshData.vertices;
+        mesh.triangles = waterMeshData.triangles;
+        mesh.uv = waterMeshData.uv;
+
+        waterMeshFilter.mesh = mesh;
+
         water.transform.SetParent(terrain.transform);
 
         Material mat = new Material(waterShader);
@@ -79,20 +94,20 @@ public class TerrainGenerator : MonoBehaviour
         return water;
     }
 
-    private void UpdateGizmos()
-    {
-        if (!drawGizmos)
-        {
-            if (instantiatedMeshGizmo != null)
-                DestroyImmediate(instantiatedMeshGizmo.gameObject);
-            return;
-        }
+    // private void UpdateGizmos()
+    // {
+    //     if (!drawGizmos)
+    //     {
+    //         if (instantiatedMeshGizmo != null)
+    //             DestroyImmediate(instantiatedMeshGizmo.gameObject);
+    //         return;
+    //     }
 
-        if (instantiatedMeshGizmo == null)
-        {
-            instantiatedMeshGizmo = Instantiate(meshGizmo);
-        }
+    //     if (instantiatedMeshGizmo == null)
+    //     {
+    //         instantiatedMeshGizmo = Instantiate(meshGizmo);
+    //     }
 
-        instantiatedMeshGizmo.Draw(terrainMeshInfo.edges, terrainMeshInfo.vertices);
-    }
+    //     instantiatedMeshGizmo.Draw(terrainMeshData.edges, terrainMeshData.vertices);
+    // }
 }

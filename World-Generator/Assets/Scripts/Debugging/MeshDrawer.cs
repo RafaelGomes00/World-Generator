@@ -8,7 +8,7 @@ public class MeshDrawer : GizmosDrawer
     [SerializeField] private Color edgeColor;
     [SerializeField] private Color verticeColor;
 
-    private Vector3[,] vertices;
+    private Vector3[] vertices;
     private Edge[] edges;
 
     public override void Draw(params object[] parameters)
@@ -16,7 +16,7 @@ public class MeshDrawer : GizmosDrawer
         foreach(object obj in parameters)
         {
             if (obj is Vector3[])
-                vertices = obj as Vector3[,];
+                vertices = obj as Vector3[];
             else if (obj is Edge[])
                 edges = obj as Edge[];
         }
