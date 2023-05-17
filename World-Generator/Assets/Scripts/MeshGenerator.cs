@@ -6,36 +6,38 @@ using UnityEngine;
 
 public static class MeshGenerator
 {
-
-    public static Mesh GenerateMesh(Noise noiseFunction, int area, out MeshInfo meshInfo)
+    public static Mesh GenerateMesh(float[,] noiseValues, int area, out MeshInfo meshInfo)
     {
         Mesh mesh = new Mesh();
         mesh.Clear();
 
-        float[,] noiseValues = noiseFunction.GenerateNoise(area, area);
-
-        Vector3[] vertices = GenerateVertices(noiseValues, area);
+        Vector3[,] verticesGrid = new Vector3[0, 0];
+        Vector3[] vertices = GenerateVertices(noiseValues, area, out verticesGrid);
         mesh.vertices = vertices;
         Edge[] edges = new Edge[0];
         mesh.triangles = GenerateTriangles(vertices, area, out edges);
         mesh.uv = GenerateUv(area);
 
-        meshInfo = new MeshInfo(edges, vertices);
+        meshInfo = new MeshInfo(edges, verticesGrid);
 
         return mesh;
     }
 
-    private static Vector3[] GenerateVertices(float[,] noise, int area)
+    private static Vector3[] GenerateVertices(float[,] noise, int area, out Vector3[,] verticesGrid)
     {
         List<Vector3> vertices = new List<Vector3>();
+        Vector3[,] generatedVerticesGrid = new Vector3[area, area];
+
         for (int i = 0; i < area; i++)
         {
             for (int j = 0; j < area; j++)
             {
                 Vector3 pos = new Vector3(i + ((area - 1) / -2f), noise[i, j], j - ((area - 1) / 2f));
                 vertices.Add(pos);
+                generatedVerticesGrid[i, j] = pos;
             }
         }
+        verticesGrid = generatedVerticesGrid;
         return vertices.ToArray();
     }
 
@@ -92,5 +94,21 @@ public static class MeshGenerator
         }
         edges = edgesList.ToArray();
         return newTriangles.ToArray();
+    }
+
+    public static Mesh GenerateWater(int size, out MeshInfo meshInfo)
+    {
+        Mesh mesh = new Mesh();
+        Vector3[,] verticesGrid = new Vector3[0, 0];
+
+        Vector3[] vertices = GenerateVertices(new float[size,size], size, out verticesGrid);
+        mesh.vertices = vertices;
+        Edge[] edges = new Edge[0];
+        mesh.triangles = GenerateTriangles(vertices, size, out edges);
+        mesh.uv = GenerateUv(size);
+
+        meshInfo = new MeshInfo(edges, verticesGrid);
+
+        return mesh;
     }
 }
