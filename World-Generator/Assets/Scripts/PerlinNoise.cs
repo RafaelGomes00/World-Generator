@@ -10,7 +10,7 @@ public class PerlinNoise : Noise
     public override float[,] GenerateNoise(int width, int height)
     {
         float[,] pixels = new float[width, height];
-        Texture2D tex = new Texture2D(width, height);
+        // Texture2D tex = new Texture2D(width, height);
 
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
@@ -64,14 +64,14 @@ public class PerlinNoise : Noise
             for (int y = 0; y < height; y++)
             {
                 pixels[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, pixels[x, y]);
-                tex.SetPixel(x, y, Color.Lerp(Color.black, Color.white, pixels[x, y]));
-
-                pixels[x, y] = heightCurve.Evaluate(pixels[x,y]) * mapHeight;
+                // tex.SetPixel(x, y, Color.Lerp(Color.black, Color.white, pixels[x, y]));
+                AnimationCurve nHeightCurve = new AnimationCurve(heightCurve.keys);
+                pixels[x, y] = nHeightCurve.Evaluate(pixels[x,y]) * mapHeight;
             }
         }
 
-        tex.Apply();
-        debugImage.texture = tex;
+        // tex.Apply();
+        // debugImage.texture = tex;
         return pixels;
     }
 

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
+using System.Threading;
 
 public class TerrainGenerator : MonoBehaviour
 {
@@ -26,8 +28,33 @@ public class TerrainGenerator : MonoBehaviour
     private GameObject terrain;
     private GameObject water;
 
+    private Queue<MapThreadInfo<ChunkData>> chunkDataInfoQueue = new Queue<MapThreadInfo<ChunkData>>();
+    private Queue<MapThreadInfo<ChunkData>> meshDataInfoQueue = new Queue<MapThreadInfo<ChunkData>>();
+
+    private void Update()
+    {
+        if (chunkDataInfoQueue.Count > 0)
+        {
+            for (int i = 0; i < chunkDataInfoQueue.Count; i++)
+            {
+                MapThreadInfo<ChunkData> threadInfo = chunkDataInfoQueue.Dequeue();
+                threadInfo.callback(threadInfo.parameter);
+            }
+        }
+    }
+
     [Button]
     public void CreateTerrain()
+    {
+        ResetTerrain();
+
+        // terrain = GenerateTerrain();
+        // water = GenerateWater(terrain);
+
+        // UpdateGizmos();
+    }
+
+    private void ResetTerrain()
     {
         if (terrain != null)
         {
@@ -42,56 +69,91 @@ public class TerrainGenerator : MonoBehaviour
 
         terrainMeshData = new MeshData();
         waterMeshData = new MeshData();
-
-        terrain = GenerateTerrain();
-        water = GenerateWater(terrain);
-
-        // UpdateGizmos();
     }
 
-    private GameObject GenerateTerrain()
+    public void RequestMapData(Action<ChunkData> callback)
     {
-        GameObject terrain = new GameObject("Terrain");
-        MeshRenderer terrainRenderer = terrain.AddComponent<MeshRenderer>();
-        MeshFilter terrainMeshFilter = terrain.AddComponent<MeshFilter>();
+        ThreadStart threadStart = delegate
+        {
+            RequestMapDataRoutine(callback);
+        };
 
+        new Thread(threadStart).Start();
+    }
+
+    public void RequestMapDataRoutine(Action<ChunkData> callback)
+    {
+        ChunkData chunkData = GenerateChunk();
+        lock (chunkDataInfoQueue) { chunkDataInfoQueue.Enqueue(new MapThreadInfo<ChunkData>(callback, chunkData)); }
+    }
+
+    private ChunkData GenerateChunk()
+    {
         float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize);
+        MeshData terrainData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
+        MeshData waterData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
 
-        terrainMeshData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
-        Mesh mesh = new Mesh();
-        mesh.vertices = terrainMeshData.vertices;
-        mesh.triangles = terrainMeshData.triangles;
-        mesh.uv = terrainMeshData.uv;
-
-        terrainMeshFilter.mesh = mesh;
-
-        Material mat = new Material(terrainShader);
-        mat.SetTexture("_MainTexture", TextureCreator.GenerateTexture(noiseValues, gradient, waterlevel, chunkSize));
-        terrainRenderer.sharedMaterial = mat;
-
-        return terrain;
+        return new ChunkData(terrainData, new MaterialInfo(noiseValues, terrainShader, gradient, waterlevel, chunkSize), waterData, waterShader);
     }
-    private GameObject GenerateWater(GameObject terrain)
+
+    // private GameObject GenerateTerrain()
+    // {
+    //     GameObject terrain = new GameObject("Terrain");
+    //     MeshRenderer terrainRenderer = terrain.AddComponent<MeshRenderer>();
+    //     MeshFilter terrainMeshFilter = terrain.AddComponent<MeshFilter>();
+
+
+    //     terrainMeshData = 
+    //     Mesh mesh = new Mesh();
+    //     mesh.vertices = terrainMeshData.vertices;
+    //     mesh.triangles = terrainMeshData.triangles;
+    //     mesh.uv = terrainMeshData.uv;
+
+    //     terrainMeshFilter.mesh = mesh;
+
+
+    //     terrainRenderer.sharedMaterial = mat;
+
+    //     return terrain;
+    // }
+    // private GameObject GenerateWater(GameObject terrain)
+    // {
+    //     GameObject water = new GameObject("Water");
+    //     water.transform.position = new Vector3(terrain.transform.position.x, waterlevel, terrain.transform.position.z);
+    //     MeshRenderer waterMeshRenderer = water.AddComponent<MeshRenderer>();
+    //     MeshFilter waterMeshFilter = water.AddComponent<MeshFilter>();
+
+    //     waterMeshData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
+    //     Mesh mesh = new Mesh();
+    //     mesh.vertices = waterMeshData.vertices;
+    //     mesh.triangles = waterMeshData.triangles;
+    //     mesh.uv = waterMeshData.uv;
+
+    //     waterMeshFilter.mesh = mesh;
+
+    //     water.transform.SetParent(terrain.transform);
+
+    //     Material mat = new Material(waterShader);
+    //     waterMeshRenderer.sharedMaterial = mat;
+
+    //     return water;
+    // }
+
+    public int GetChunkSize()
     {
-        GameObject water = new GameObject("Water");
-        water.transform.position = new Vector3(terrain.transform.position.x, waterlevel, terrain.transform.position.z);
-        MeshRenderer waterMeshRenderer = water.AddComponent<MeshRenderer>();
-        MeshFilter waterMeshFilter = water.AddComponent<MeshFilter>();
+        return chunkSize;
+    }
 
-        waterMeshData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
-        Mesh mesh = new Mesh();
-        mesh.vertices = waterMeshData.vertices;
-        mesh.triangles = waterMeshData.triangles;
-        mesh.uv = waterMeshData.uv;
+    struct MapThreadInfo<T>
+    {
+        public readonly Action<T> callback;
+        public readonly T parameter;
 
-        waterMeshFilter.mesh = mesh;
-
-        water.transform.SetParent(terrain.transform);
-
-        Material mat = new Material(waterShader);
-        waterMeshRenderer.sharedMaterial = mat;
-
-        return water;
+        public MapThreadInfo(Action<T> callback, T parameter)
+        {
+            this.callback = callback;
+            this.parameter = parameter;
+        }
     }
 
     // private void UpdateGizmos()
@@ -110,4 +172,5 @@ public class TerrainGenerator : MonoBehaviour
 
     //     instantiatedMeshGizmo.Draw(terrainMeshData.edges, terrainMeshData.vertices);
     // }
+
 }
