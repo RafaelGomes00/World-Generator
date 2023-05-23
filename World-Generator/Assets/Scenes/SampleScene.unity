@@ -558,7 +558,7 @@ MonoBehaviour:
   seed: 21
   octaves: 4
   noiseScale: 50
-  lacunarity: 3
+  lacunarity: 2.5
   mapHeight: 15
   offset: {x: 0, y: 0}
   heightCurve:
@@ -574,8 +574,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 1
     - serializedVersion: 3
-      time: 0.17926574
-      value: -0.067861795
+      time: 0.24563977
+      value: -0.04448405
       inSlope: 0.064202
       outSlope: 0.064202
       tangentMode: 0
@@ -583,13 +583,22 @@ MonoBehaviour:
       inWeight: 0.18186711
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
+      time: 0.72553533
+      value: 0.46466056
+      inSlope: 2.6207764
+      outSlope: 2.6207764
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.13849516
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.16922273
+      outSlope: 0.16922273
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.30831644
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -622,7 +631,7 @@ MonoBehaviour:
     key6: {r: 1, g: 1, b: 1, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 8867
+    ctime1: 3470
     ctime2: 65535
     ctime3: 65535
     ctime4: 65535
@@ -656,7 +665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrainGenerator: {fileID: 1609424137}
-  maxViewDistance: 300
+  maxViewDistance: 400
   viewrTransform: {fileID: 1458678603}
   viewerPositon: {x: 0, y: 0}
 --- !u!1 &1949602007

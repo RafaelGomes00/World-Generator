@@ -15,5 +15,5 @@ public abstract class Noise : MonoBehaviour
     [SerializeField] protected AnimationCurve heightCurve;
     [Range(0, 1)][SerializeField] protected float persistance;
 
-    public abstract float[,] GenerateNoise(int width, int height);
+    public abstract float[,] GenerateNoise(int width, int height, Vector2 center);
 }

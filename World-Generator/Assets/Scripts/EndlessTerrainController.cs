@@ -18,7 +18,7 @@ public class EndlessTerrainController : MonoBehaviour
 
     private void Start()
     {
-        chunkSize = terrainGenerator.GetChunkSize();
+        chunkSize = terrainGenerator.GetChunkSize() - 1;
         chunksVisible = Mathf.RoundToInt(maxViewDistance / chunkSize);
     }
 

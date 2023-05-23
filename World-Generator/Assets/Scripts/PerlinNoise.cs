@@ -7,18 +7,25 @@ using UnityEngine.UI;
 public class PerlinNoise : Noise
 {
     [SerializeField] RawImage debugImage;
-    public override float[,] GenerateNoise(int width, int height)
+    public override float[,] GenerateNoise(int width, int height, Vector2 center)
     {
         float[,] pixels = new float[width, height];
         // Texture2D tex = new Texture2D(width, height);
+
+        float maxPossibleHeight = 0;
+        float amplitude = 1;
+        float frequency = 1;
 
         System.Random prng = new System.Random(seed);
         Vector2[] octaveOffsets = new Vector2[octaves];
         for (int i = 0; i < octaves; i++)
         {
-            float offsetX = prng.Next(-10000, 10000) + offset.x;
-            float offsetY = prng.Next(-10000, 10000) + offset.y;
+            float offsetX = prng.Next(-100000, 100000) + offset.x + center.x;
+            float offsetY = prng.Next(-100000, 100000) - offset.y + center.y;
             octaveOffsets[i] = new Vector2(offsetX, offsetY);
+
+            maxPossibleHeight += amplitude;
+            amplitude *= persistance;
         }
 
         if (noiseScale <= 0)
@@ -26,21 +33,21 @@ public class PerlinNoise : Noise
             noiseScale = 0.001f;
         }
 
-        float maxNoiseHeight = float.MinValue;
-        float minNoiseHeight = float.MaxValue;
+        // float maxNoiseHeight = float.MinValue;
+        // float minNoiseHeight = float.MaxValue;
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                float amplitude = 1;
-                float frequency = 1;
+                amplitude = 1;
+                frequency = 1;
                 float noiseHeight = 0;
 
                 for (int i = 0; i < octaves; i++)
                 {
-                    float xCoord = x / noiseScale * frequency + octaveOffsets[i].x;
-                    float yCoord = y / noiseScale * frequency + octaveOffsets[i].y;
+                    float xCoord = (x + octaveOffsets[i].x) / noiseScale * frequency;
+                    float yCoord = (y + octaveOffsets[i].y) / noiseScale * frequency;
 
                     float noiseValue = Mathf.PerlinNoise(xCoord, yCoord) * 2 - 1;
                     noiseHeight += noiseValue * amplitude;
@@ -49,11 +56,10 @@ public class PerlinNoise : Noise
                     frequency *= lacunarity;
                 }
 
-                if (noiseHeight > maxNoiseHeight)
-                    maxNoiseHeight = noiseHeight;
-                else if (noiseHeight < minNoiseHeight)
-                    minNoiseHeight = noiseHeight;
-
+                // if (noiseHeight > maxNoiseHeight)
+                //     maxNoiseHeight = noiseHeight;
+                // else if (noiseHeight < minNoiseHeight)
+                //     minNoiseHeight = noiseHeight;
 
                 pixels[x, y] = noiseHeight;
             }
@@ -63,10 +69,12 @@ public class PerlinNoise : Noise
         {
             for (int y = 0; y < height; y++)
             {
-                pixels[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, pixels[x, y]);
-                // tex.SetPixel(x, y, Color.Lerp(Color.black, Color.white, pixels[x, y]));
+                float normalizedHeight = (pixels[x, y] + 1) / (2f * maxPossibleHeight / 1.75f);
+                pixels[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
+                // pixels[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, pixels[x, y]);
+
                 AnimationCurve nHeightCurve = new AnimationCurve(heightCurve.keys);
-                pixels[x, y] = nHeightCurve.Evaluate(pixels[x,y]) * mapHeight;
+                pixels[x, y] = nHeightCurve.Evaluate(pixels[x, y]) * mapHeight;
             }
         }
 

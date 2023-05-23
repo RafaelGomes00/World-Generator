@@ -71,25 +71,25 @@ public class TerrainGenerator : MonoBehaviour
         waterMeshData = new MeshData();
     }
 
-    public void RequestMapData(Action<ChunkData> callback)
+    public void RequestMapData(Vector2 center, Action<ChunkData> callback)
     {
         ThreadStart threadStart = delegate
         {
-            RequestMapDataRoutine(callback);
+            RequestMapDataRoutine(center, callback);
         };
 
         new Thread(threadStart).Start();
     }
 
-    public void RequestMapDataRoutine(Action<ChunkData> callback)
+    public void RequestMapDataRoutine(Vector2 center, Action<ChunkData> callback)
     {
-        ChunkData chunkData = GenerateChunk();
+        ChunkData chunkData = GenerateChunk(center);
         lock (chunkDataInfoQueue) { chunkDataInfoQueue.Enqueue(new MapThreadInfo<ChunkData>(callback, chunkData)); }
     }
 
-    private ChunkData GenerateChunk()
+    private ChunkData GenerateChunk(Vector2 center)
     {
-        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize);
+        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize, center);
         MeshData terrainData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
         MeshData waterData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
 

@@ -36,7 +36,7 @@ public class TerrainChunk
         terrainMeshObject.transform.SetParent(parent);
         SetVisible(false);
 
-        terrainGenerator.RequestMapData(OnChunkDataReceived);
+        terrainGenerator.RequestMapData(position, OnChunkDataReceived);
     }
 
     private void OnChunkDataReceived(ChunkData chunkData)
