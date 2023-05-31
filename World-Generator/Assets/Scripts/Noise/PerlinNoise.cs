@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
+[CreateAssetMenu(menuName = "Terrain generator/Noise/Perlin Noise", fileName = "NoiseSettings")]
 public class PerlinNoise : Noise
 {
-    [SerializeField] RawImage debugImage;
-    public override float[,] GenerateNoise(int width, int height, Vector2 center)
+    public override float[,] GenerateNoise(int width, int height, Vector2 center, Action<float[,], float, float> callback)
     {
         float[,] pixels = new float[width, height];
-        // Texture2D tex = new Texture2D(width, height);
 
         float maxPossibleHeight = 0;
         float amplitude = 1;
@@ -33,8 +33,8 @@ public class PerlinNoise : Noise
             noiseScale = 0.001f;
         }
 
-        // float maxNoiseHeight = float.MinValue;
-        // float minNoiseHeight = float.MaxValue;
+        float maxNoiseHeight = float.MinValue;
+        float minNoiseHeight = float.MaxValue;
 
         for (int x = 0; x < width; x++)
         {
@@ -56,15 +56,16 @@ public class PerlinNoise : Noise
                     frequency *= lacunarity;
                 }
 
-                // if (noiseHeight > maxNoiseHeight)
-                //     maxNoiseHeight = noiseHeight;
-                // else if (noiseHeight < minNoiseHeight)
-                //     minNoiseHeight = noiseHeight;
+                if (noiseHeight > maxNoiseHeight)
+                    maxNoiseHeight = noiseHeight;
+                else if (noiseHeight < minNoiseHeight)
+                    minNoiseHeight = noiseHeight;
 
                 pixels[x, y] = noiseHeight;
             }
         }
 
+        callback?.Invoke(pixels, minNoiseHeight, maxNoiseHeight);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -77,9 +78,6 @@ public class PerlinNoise : Noise
                 pixels[x, y] = nHeightCurve.Evaluate(pixels[x, y]) * mapHeight;
             }
         }
-
-        // tex.Apply();
-        // debugImage.texture = tex;
         return pixels;
     }
 

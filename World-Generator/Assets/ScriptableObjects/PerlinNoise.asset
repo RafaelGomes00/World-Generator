@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f486735f9fb5932449e7ffa315d01d10, type: 3}
+  m_Name: PerlinNoise
+  m_EditorClassIdentifier: 
+  seed: 21
+  octaves: 4
+  noiseScale: 50
+  lacunarity: 2.5
+  mapHeight: 15
+  offset: {x: 0, y: 0}
+  heightCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.00440979
+      value: -0.004852295
+      inSlope: -0.060603067
+      outSlope: -0.060603067
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.24563977
+      value: -0.04448405
+      inSlope: 0.064202
+      outSlope: 0.064202
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.18186711
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.72553533
+      value: 0.46466056
+      inSlope: 2.6207764
+      outSlope: 2.6207764
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.13849516
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.16922273
+      outSlope: 0.16922273
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.30831644
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  persistance: 0.3
+  _Preview: {fileID: 0}
