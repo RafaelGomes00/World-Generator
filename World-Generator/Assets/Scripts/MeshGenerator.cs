@@ -43,6 +43,6 @@ public static class MeshGenerator
 
     public static MeshData GenerateMesh(int area, int LODLevel)
     {
-        return GenerateMesh(new float[area, area], area, LODLevel);
+        return GenerateMesh(new float[area, area], area, 3);
     }
 }

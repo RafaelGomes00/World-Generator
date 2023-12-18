@@ -7,7 +7,7 @@ using System.Threading;
 
 public class TerrainGenerator : MonoBehaviour
 {
-    [SerializeField] private TerrainNoise noiseFunction;
+    [SerializeField] private Noise noiseFunction;
     [SerializeField] private Shader terrainShader;
     [SerializeField] private Shader waterShader;
     [SerializeField] private Gradient gradient;
@@ -41,17 +41,6 @@ public class TerrainGenerator : MonoBehaviour
                 threadInfo.callback(threadInfo.parameter);
             }
         }
-    }
-
-    [Button]
-    public void CreateTerrain()
-    {
-        ResetTerrain();
-
-        // terrain = GenerateTerrain();
-        // water = GenerateWater(terrain);
-
-        // UpdateGizmos();
     }
 
     private void ResetTerrain()
@@ -89,7 +78,7 @@ public class TerrainGenerator : MonoBehaviour
 
     private ChunkData GenerateChunk(Vector2 center)
     {
-        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, center);
+        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize, center);
         MeshData terrainData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
         MeshData waterData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
 

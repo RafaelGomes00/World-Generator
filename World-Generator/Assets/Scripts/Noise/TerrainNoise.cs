@@ -8,21 +8,10 @@ using UnityEngine;
 public class TerrainNoise : ScriptableObject
 {
     public string objectsPath;
-    [Expandable] public List<Noise> noiseFunctions;
+    [Expandable] public Noise noiseFunction;
 
     public float[,] GenerateNoise(int chunkSize, Vector2 center)
     {
-        return noiseFunctions[0].GenerateNoise(chunkSize, chunkSize, center);
+        return noiseFunction.GenerateNoise(chunkSize, chunkSize, center);
     }
-
-    public void AddNewItem(Noise function)
-    {
-        noiseFunctions.Add(function);
-    }
-
-    private string GeneratePath()
-    {
-        return $"{System.IO.Path.Combine(objectsPath, "Noise")}_{noiseFunctions.Count}.asset";
-    }
-
 }

@@ -13,49 +13,40 @@ MonoBehaviour:
   m_Name: PerlinNoise
   m_EditorClassIdentifier: 
   seed: 21
-  octaves: 4
-  noiseScale: 50
-  lacunarity: 2.5
-  mapHeight: 15
+  octaves: 5
+  noiseScale: 1000
+  lacunarity: 3
+  mapHeight: 500
   offset: {x: 0, y: 0}
   heightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.00440979
-      value: -0.004852295
-      inSlope: -0.060603067
-      outSlope: -0.060603067
+      time: -0.0099252835
+      value: -0.030736022
+      inSlope: -0.035901133
+      outSlope: -0.035901133
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 1
+      outWeight: 0.28001738
     - serializedVersion: 3
-      time: 0.24563977
-      value: -0.04448405
-      inSlope: 0.064202
-      outSlope: 0.064202
+      time: 0.8510224
+      value: 0.46174058
+      inSlope: 2.2360058
+      outSlope: 2.2360058
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.18186711
-      outWeight: 0.33333334
+      inWeight: 0.106642336
+      outWeight: 0.2927261
     - serializedVersion: 3
-      time: 0.72553533
-      value: 0.46466056
-      inSlope: 2.6207764
-      outSlope: 2.6207764
+      time: 1.0067463
+      value: 0.9988736
+      inSlope: 0.42355818
+      outSlope: 0.42355818
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.13849516
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.16922273
-      outSlope: 0.16922273
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.30831644
+      inWeight: 0.41169885
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
