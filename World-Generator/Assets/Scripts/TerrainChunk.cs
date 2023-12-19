@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TerrainChunk
@@ -46,23 +47,21 @@ public class TerrainChunk
         terrainMesh.triangles = chunkData.terrainData.triangles;
         terrainMesh.uv = chunkData.terrainData.uv;
 
-        Material terrainMat = new Material(chunkData.terrainMatInfo.terrainShader);
-        terrainMat.SetTexture("_MainTexture", TextureCreator.GenerateTexture(chunkData.terrainMatInfo.noiseValues,
-        chunkData.terrainMatInfo.gradient,
-        chunkData.terrainMatInfo.waterlevel,
-        chunkData.terrainMatInfo.chunkSize));
-
-        terrainRenderer.sharedMaterial = terrainMat;
+        terrainRenderer.sharedMaterial = chunkData.terrainMaterial;
         terrainMeshFilter.mesh = terrainMesh;
 
-        Mesh waterMesh = new Mesh();
-        waterMesh.vertices = chunkData.waterData.vertices;
-        waterMesh.triangles = chunkData.waterData.triangles;
-        waterMesh.uv = chunkData.waterData.uv;
+        if (chunkData.waterData != null)
+        {
+            Mesh waterMesh = new Mesh();
+            waterMesh.vertices = chunkData.waterData.vertices;
+            waterMesh.triangles = chunkData.waterData.triangles;
+            waterMesh.uv = chunkData.waterData.uv;
 
-        Material waterMat = new Material(chunkData.waterShader);
-        waterRenderer.sharedMaterial = waterMat;
-        waterMeshFilter.mesh = waterMesh;
+            waterMeshObject.transform.position = new Vector3(waterMeshObject.transform.position.x, chunkData.waterLevel, waterMeshObject.transform.position.z);
+
+            waterRenderer.sharedMaterial = chunkData.waterMaterial;
+            waterMeshFilter.mesh = waterMesh;
+        }
     }
 
     public void SetVisible(bool value)

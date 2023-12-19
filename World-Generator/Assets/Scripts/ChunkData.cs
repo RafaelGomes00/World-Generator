@@ -5,17 +5,20 @@ using UnityEngine;
 public struct ChunkData
 {
     public readonly MeshData terrainData;
-    public readonly MaterialInfo terrainMatInfo;
+    public readonly Material terrainMaterial;
+
+    public readonly float waterLevel;
 
     public readonly MeshData waterData;
-    public readonly Shader waterShader;
+    public readonly Material waterMaterial;
 
-    public ChunkData(MeshData terrain, MaterialInfo terrainMatInfo, MeshData water, Shader waterShader)
+    public ChunkData(MeshData terrain, Material terrainMaterial, MeshData water, Material waterMaterial, float waterLevel)
     {
         terrainData = terrain;
-        this.terrainMatInfo = terrainMatInfo;
         waterData = water;
-        this.waterShader = waterShader;
+        this.terrainMaterial = terrainMaterial;
+        this.waterMaterial = waterMaterial;
+        this.waterLevel = waterLevel;
     }
 }
 
@@ -23,16 +26,20 @@ public struct MaterialInfo
 {
     public float[,] noiseValues;
     public Shader terrainShader;
-    public Gradient gradient;
-    public float waterlevel;
-    public int chunkSize;
+    public float maxNoiseHeight;
+    public float minNoiseHeight;
+    public Color deepSeaColor;
+    public Color[] baseColors;
+    public float[] baseStartHeights;
 
-    public MaterialInfo(float[,] noiseValues, Shader terrainShader, Gradient gradient, float waterLevel, int chunkSize)
+    public MaterialInfo(float[,] noiseValues, Shader terrainShader, float maxNoiseHeight, float minNoiseHeight, Color[] baseColors, float[] baseStartHeights, Color deepSeaColor)
     {
         this.noiseValues = noiseValues;
         this.terrainShader = terrainShader;
-        this.gradient = gradient;
-        this.waterlevel = waterLevel;
-        this.chunkSize = chunkSize;
+        this.maxNoiseHeight = maxNoiseHeight;
+        this.minNoiseHeight = minNoiseHeight;
+        this.baseColors = baseColors;
+        this.baseStartHeights = baseStartHeights;
+        this.deepSeaColor = deepSeaColor;
     }
 }

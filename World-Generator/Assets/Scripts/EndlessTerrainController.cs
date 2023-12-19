@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class EndlessTerrainController : MonoBehaviour
@@ -22,6 +23,7 @@ public class EndlessTerrainController : MonoBehaviour
         viewerPositon = new Vector2(viewrTransform.position.x, viewrTransform.position.z);
         UpdateVisibleChunks();
     }
+    
     private void UpdateVisibleChunks()
     {
         for (int i = 0; i < terrainChunksVisible.Count; i++)

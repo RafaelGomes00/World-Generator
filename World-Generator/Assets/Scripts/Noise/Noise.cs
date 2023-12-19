@@ -17,13 +17,24 @@ public abstract class Noise : ScriptableObject
 
     [ShowAssetPreview(64, 64)][SerializeField] private Texture2D _Preview;
 
-    public abstract float[,] GenerateNoise(int width, int height, Vector2 center, Action<float[,], float, float> callback = null);
+    public abstract float[,] GenerateNoise(int width, int height, Vector2 center, out float minNoiseHeight, out float maxNoiseHeight);
+
+    public float GetMaxNoiseHeight()
+    {
+        return mapHeight * heightCurve.Evaluate(1);
+    }
+    public float GetMinNoiseHeight()
+    {
+        return mapHeight * heightCurve.Evaluate(0);
+    }
 
     [Button]
     private void PreviewNoise()
     {
+        float minNoiseHeight, maxNoiseHeight;
         int size = 251;
-        GenerateNoise(size, size, Vector2.zero, SetTexture);
+        float[,] generatedNoise = GenerateNoise(size, size, Vector2.zero, out minNoiseHeight, out maxNoiseHeight);
+        SetTexture(generatedNoise, minNoiseHeight, maxNoiseHeight);
     }
 
     private void SetTexture(float[,] generatedNoise, float minNoiseHeight, float maxNoiseHeight)

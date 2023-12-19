@@ -4,22 +4,25 @@ using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using System.Threading;
+using Unity.VisualScripting;
 
 public class TerrainGenerator : MonoBehaviour
 {
     [SerializeField] private Noise noiseFunction;
-    [SerializeField] private Shader terrainShader;
-    [SerializeField] private Shader waterShader;
-    [SerializeField] private Gradient gradient;
+    // [SerializeField] private Gradient gradient;
 
     [Header("Values")]
     [SerializeField] private int chunkSize;
-    [Range(0, 5)][SerializeField] private float waterlevel;
+    [Range(0, 100)][SerializeField] private float waterlevel;
     [Range(0, 5)][SerializeField] private int LODLevel;
 
-    // [Header("Debug")]
-    // [OnValueChanged("UpdateGizmos")][SerializeField] private bool drawGizmos;
-    // [SerializeField] private MeshDrawer meshGizmo;
+    [Header("Shader / Colors")]
+    [SerializeField] private Material terrainMat;
+    [SerializeField] private Material waterMaterial;
+    [SerializeField] private Color deepSeaColor;
+    [SerializeField] private Color[] baseColors;
+    [Range(0,1)][SerializeField] private float[] baseBlends;
+    [Range(0, 1)][SerializeField] private float[] baseStartHeights;
 
     private MeshDrawer instantiatedMeshGizmo;
     private MeshData terrainMeshData;
@@ -30,6 +33,17 @@ public class TerrainGenerator : MonoBehaviour
 
     private Queue<MapThreadInfo<ChunkData>> chunkDataInfoQueue = new Queue<MapThreadInfo<ChunkData>>();
     private Queue<MapThreadInfo<ChunkData>> meshDataInfoQueue = new Queue<MapThreadInfo<ChunkData>>();
+
+    private void Start()
+    {
+        terrainMat.SetFloat("minHeight", noiseFunction.GetMinNoiseHeight());
+        terrainMat.SetFloat("maxHeight", noiseFunction.GetMaxNoiseHeight());
+        terrainMat.SetColor("deepSeaColor", deepSeaColor);
+        terrainMat.SetColorArray("baseColors", baseColors);
+        terrainMat.SetFloatArray("baseStartHeights", baseStartHeights);
+        terrainMat.SetInt("baseColorCount", baseColors.Length);
+        terrainMat.SetFloatArray("baseBlends", baseBlends);
+    }
 
     private void Update()
     {
@@ -78,11 +92,12 @@ public class TerrainGenerator : MonoBehaviour
 
     private ChunkData GenerateChunk(Vector2 center)
     {
-        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize, center);
+        float min, max;
+        float[,] noiseValues = noiseFunction.GenerateNoise(chunkSize, chunkSize, center, out min, out max);
         MeshData terrainData = MeshGenerator.GenerateMesh(noiseValues, chunkSize, LODLevel);
         MeshData waterData = MeshGenerator.GenerateMesh(chunkSize, LODLevel);
 
-        return new ChunkData(terrainData, new MaterialInfo(noiseValues, terrainShader, gradient, waterlevel, chunkSize), waterData, waterShader);
+        return new ChunkData(terrainData, terrainMat, waterData, waterMaterial, waterlevel);
     }
 
     // private GameObject GenerateTerrain()

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [CreateAssetMenu(menuName = "Terrain generator/Noise/Perlin Noise", fileName = "NoiseSettings")]
 public class PerlinNoise : Noise
 {
-    public override float[,] GenerateNoise(int width, int height, Vector2 center, Action<float[,], float, float> callback)
+    public override float[,] GenerateNoise(int width, int height, Vector2 center, out float minNoiseHeight, out float maxNoiseHeight)
     {
         float[,] pixels = new float[width, height];
 
@@ -33,8 +33,8 @@ public class PerlinNoise : Noise
             noiseScale = 0.001f;
         }
 
-        float maxNoiseHeight = float.MinValue;
-        float minNoiseHeight = float.MaxValue;
+        float maxCalculatedNoiseHeight = float.MinValue;
+        float minCalculatedNoiseHeight = float.MaxValue;
 
         for (int x = 0; x < width; x++)
         {
@@ -56,16 +56,15 @@ public class PerlinNoise : Noise
                     frequency *= lacunarity;
                 }
 
-                if (noiseHeight > maxNoiseHeight)
-                    maxNoiseHeight = noiseHeight;
-                else if (noiseHeight < minNoiseHeight)
-                    minNoiseHeight = noiseHeight;
+                if (noiseHeight > maxCalculatedNoiseHeight)
+                    maxCalculatedNoiseHeight = noiseHeight;
+                else if (noiseHeight < minCalculatedNoiseHeight)
+                    minCalculatedNoiseHeight = noiseHeight;
 
                 pixels[x, y] = noiseHeight;
             }
         }
 
-        callback?.Invoke(pixels, minNoiseHeight, maxNoiseHeight);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -78,6 +77,10 @@ public class PerlinNoise : Noise
                 pixels[x, y] = nHeightCurve.Evaluate(pixels[x, y]) * mapHeight;
             }
         }
+
+        minNoiseHeight = minCalculatedNoiseHeight;
+        maxNoiseHeight = maxCalculatedNoiseHeight;
+
         return pixels;
     }
 

@@ -9,9 +9,4 @@ public class TerrainNoise : ScriptableObject
 {
     public string objectsPath;
     [Expandable] public Noise noiseFunction;
-
-    public float[,] GenerateNoise(int chunkSize, Vector2 center)
-    {
-        return noiseFunction.GenerateNoise(chunkSize, chunkSize, center);
-    }
 }
