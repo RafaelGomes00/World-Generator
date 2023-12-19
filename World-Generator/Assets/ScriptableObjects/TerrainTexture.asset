@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9deeea4613b29ce4ba0af0281690a2bd, type: 3}
+  m_Name: TerrainTexture
+  m_EditorClassIdentifier: 
+  layers:
+  - tex: {fileID: 2800000, guid: dfcf749afb5dd024996f369df112253d, type: 3}
+    color: {r: 0.85098046, g: 0.75294125, b: 0.53333336, a: 0}
+    colorStrength: 0.102
+    startHeight: 0
+    blendStrength: 0.3
+    textureScale: 100
+  - tex: {fileID: 2800000, guid: c4362d9767b836f4294eff6f74d6cbf2, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 0}
+    colorStrength: 0
+    startHeight: 0.09
+    blendStrength: 0.1
+    textureScale: 20
+  - tex: {fileID: 2800000, guid: 2b98707b50fdc62408653c5e57e6c88f, type: 3}
+    color: {r: 0.32156864, g: 0.32156864, b: 0.32156864, a: 0}
+    colorStrength: 0.717
+    startHeight: 0.542
+    blendStrength: 0.157
+    textureScale: 50
+  - tex: {fileID: 2800000, guid: 063f7c552ff045c4380dfe07c478f1eb, type: 3}
+    color: {r: 1, g: 1, b: 1, a: 0}
+    colorStrength: 0
+    startHeight: 0.91
+    blendStrength: 0.102
+    textureScale: 5

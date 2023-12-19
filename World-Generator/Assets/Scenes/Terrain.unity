@@ -670,7 +670,6 @@ GameObject:
   - component: {fileID: 1609424134}
   - component: {fileID: 1609424137}
   - component: {fileID: 1609424138}
-  - component: {fileID: 1609424139}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -706,27 +705,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseFunction: {fileID: 11400000, guid: c3edf1a0e44c6c247b8259e8c914e9d1, type: 2}
+  terrainMat: {fileID: 2100000, guid: 9cd1db1692b834b4db143b4965f11b99, type: 2}
+  waterMaterial: {fileID: 2100000, guid: 553367ba13bca9840ae28829eb90cc28, type: 2}
   chunkSize: 241
   waterlevel: 23
   LODLevel: 0
-  terrainMat: {fileID: 2100000, guid: 9cd1db1692b834b4db143b4965f11b99, type: 2}
-  waterMaterial: {fileID: 2100000, guid: 553367ba13bca9840ae28829eb90cc28, type: 2}
-  deepSeaColor: {r: 0.13803844, g: 0.24027626, b: 0.6226415, a: 1}
-  baseColors:
-  - {r: 0.8207547, g: 0.6745822, b: 0.4219918, a: 1}
-  - {r: 0.19045925, g: 0.3773585, b: 0.19463441, a: 1}
-  - {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  baseBlends:
-  - 0.699
-  - 0.5
-  - 0.452
-  - 0.157
-  baseStartHeights:
-  - 0
-  - 0.045
-  - 0.6
-  - 0.9
 --- !u!114 &1609424138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,46 +726,6 @@ MonoBehaviour:
   maxViewDistance: 400
   viewrTransform: {fileID: 543450652336108901}
   viewerPositon: {x: 0, y: 0}
---- !u!114 &1609424139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1609424131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9c169665fbdec4a84d8dda7ad9f36d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mat: {fileID: 2100000, guid: 9cd1db1692b834b4db143b4965f11b99, type: 2}
-  minHeight: -25.5914
-  maxHeight: 496.9733
-  layers:
-  - tex: {fileID: 2800000, guid: dfcf749afb5dd024996f369df112253d, type: 3}
-    color: {r: 0.8490566, g: 0.7510373, b: 0.53266287, a: 0}
-    colorStrength: 0.102
-    startHeight: 0
-    blendStrength: 0.3
-    textureScale: 100
-  - tex: {fileID: 2800000, guid: c4362d9767b836f4294eff6f74d6cbf2, type: 3}
-    color: {r: 1, g: 1, b: 1, a: 0}
-    colorStrength: 0
-    startHeight: 0.09
-    blendStrength: 0.1
-    textureScale: 20
-  - tex: {fileID: 2800000, guid: 2b98707b50fdc62408653c5e57e6c88f, type: 3}
-    color: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 0}
-    colorStrength: 0.717
-    startHeight: 0.542
-    blendStrength: 0.157
-    textureScale: 50
-  - tex: {fileID: 2800000, guid: 063f7c552ff045c4380dfe07c478f1eb, type: 3}
-    color: {r: 1, g: 1, b: 1, a: 0}
-    colorStrength: 0
-    startHeight: 0.91
-    blendStrength: 0.102
-    textureScale: 5
 --- !u!28 &2026551176
 Texture2D:
   m_ObjectHideFlags: 0
