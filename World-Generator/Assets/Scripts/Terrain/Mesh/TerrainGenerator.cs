@@ -1,28 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using NaughtyAttributes;
 using UnityEngine;
 using System.Threading;
-using Unity.VisualScripting;
 
 public class TerrainGenerator : MonoBehaviour
 {
+    [Header("Noise config")]
     [SerializeField] private Noise noiseFunction;
     // [SerializeField] private Gradient gradient;
 
+    [Header("Materials")]
+    [SerializeField] private Material terrainMat;
+    [SerializeField] private Material waterMaterial;
+    
     [Header("Values")]
     [SerializeField] private int chunkSize;
     [Range(0, 100)][SerializeField] private float waterlevel;
     [Range(0, 5)][SerializeField] private int LODLevel;
 
-    [Header("Shader / Colors")]
-    [SerializeField] private Material terrainMat;
-    [SerializeField] private Material waterMaterial;
-    [SerializeField] private Color deepSeaColor;
-    [SerializeField] private Color[] baseColors;
-    [Range(0,1)][SerializeField] private float[] baseBlends;
-    [Range(0, 1)][SerializeField] private float[] baseStartHeights;
+
+    // [SerializeField] private Color deepSeaColor;
+    // [SerializeField] private Color[] baseColors;
+    // [Range(0,1)][SerializeField] private float[] baseBlends;
+    // [Range(0, 1)][SerializeField] private float[] baseStartHeights;
 
     private MeshDrawer instantiatedMeshGizmo;
     private MeshData terrainMeshData;
@@ -36,13 +36,13 @@ public class TerrainGenerator : MonoBehaviour
 
     private void Start()
     {
-        terrainMat.SetFloat("minHeight", noiseFunction.GetMinNoiseHeight());
-        terrainMat.SetFloat("maxHeight", noiseFunction.GetMaxNoiseHeight());
-        terrainMat.SetColor("deepSeaColor", deepSeaColor);
-        terrainMat.SetColorArray("baseColors", baseColors);
-        terrainMat.SetFloatArray("baseStartHeights", baseStartHeights);
-        terrainMat.SetInt("baseColorCount", baseColors.Length);
-        terrainMat.SetFloatArray("baseBlends", baseBlends);
+        // terrainMat.SetFloat("minHeight", noiseFunction.GetMinNoiseHeight());
+        // terrainMat.SetFloat("maxHeight", noiseFunction.GetMaxNoiseHeight());
+        // terrainMat.SetColor("deepSeaColor", deepSeaColor);
+        // terrainMat.SetColorArray("baseColors", baseColors);
+        // terrainMat.SetFloatArray("baseStartHeights", baseStartHeights);
+        // terrainMat.SetInt("baseColorCount", baseColors.Length);
+        // terrainMat.SetFloatArray("baseBlends", baseBlends);
     }
 
     private void Update()
