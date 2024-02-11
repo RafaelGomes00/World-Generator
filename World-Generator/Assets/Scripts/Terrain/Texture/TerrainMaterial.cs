@@ -1,19 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
-public class TerrainColorDebugger : MonoBehaviour
+[CreateAssetMenu(menuName = "Terrain generator/Texture/Terrain Texture", fileName = "Terrain texture")]
+public class TerrainMaterial : ScriptableObject
 {
     const int textureSize = 512;
     const TextureFormat textureFormat = TextureFormat.RGB565;
-    [SerializeField] private Material mat;
-    [SerializeField] private float minHeight, maxHeight;
 
-    public Layer[] layers;
+    public TerrainLayer[] layers;
 
-    [NaughtyAttributes.Button]
-    public void ChangeColor()
+    public void ChangeTexture(Material mat, float minHeight, float maxHeight)
     {
         mat.SetFloat("minHeight", minHeight);
         mat.SetFloat("maxHeight", maxHeight);
@@ -28,8 +24,6 @@ public class TerrainColorDebugger : MonoBehaviour
        
        Texture2DArray texturesArray = GenerateTextureArray(layers.Select(x => x.tex).ToArray());
        mat.SetTexture("baseTextures", texturesArray);
-
-       Debug.Log("Setted");
     }
 
     Texture2DArray GenerateTextureArray(Texture2D[] textures)
@@ -43,15 +37,4 @@ public class TerrainColorDebugger : MonoBehaviour
         textureArray.Apply();
         return textureArray;
     }
-}
-
-[System.Serializable]
-public class Layer
-{
-    public Texture2D tex;
-    public Color color;
-    [Range(0,1)] public float colorStrength;
-    [Range(0,1)] public float startHeight;
-    [Range(0,1)] public float blendStrength;
-    public float textureScale;
 }
