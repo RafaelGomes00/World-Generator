@@ -705,6 +705,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseFunction: {fileID: 11400000, guid: c3edf1a0e44c6c247b8259e8c914e9d1, type: 2}
+  terrainTexture: {fileID: 11400000, guid: 73a0f9c0243a33e4e9e5e73dd38805cb, type: 2}
   terrainMat: {fileID: 2100000, guid: 9cd1db1692b834b4db143b4965f11b99, type: 2}
   waterMaterial: {fileID: 2100000, guid: 553367ba13bca9840ae28829eb90cc28, type: 2}
   chunkSize: 241

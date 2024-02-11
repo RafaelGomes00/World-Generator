@@ -7,7 +7,6 @@ public class TerrainGenerator : MonoBehaviour
 {
     [Header("Noise config")]
     [SerializeField] private Noise noiseFunction;
-    // [SerializeField] private Gradient gradient;
 
     [Header("Materials")]
     [SerializeField] private TerrainMaterial terrainTexture;

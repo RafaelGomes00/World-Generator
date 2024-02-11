@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +7,7 @@ public class TerrainMaterial : ScriptableObject
     const int textureSize = 512;
     const TextureFormat textureFormat = TextureFormat.RGB565;
 
-    public Layer[] layers;
+    public TerrainLayer[] layers;
 
     public void ChangeTexture(Material mat, float minHeight, float maxHeight)
     {
