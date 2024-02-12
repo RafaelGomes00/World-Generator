@@ -40,7 +40,7 @@ public class EndlessTerrainController : MonoBehaviour
                 Vector2 viewedChunk = new Vector2(currentChunkCoordX + xOffset, currentChunkCoordY + yOffset);
                 if (terrainChunkDictionary.ContainsKey(viewedChunk))
                 {
-                    terrainChunkDictionary[viewedChunk].UpdateTerrainChunk(viewerPositon, maxViewDistance);
+                    terrainChunkDictionary[viewedChunk].UpdateTerrainChunk(viewerPositon, maxViewDistance, viewrTransform);
                     if (terrainChunkDictionary[viewedChunk].IsVisible())
                     {
                         terrainChunksVisible.Add(terrainChunkDictionary[viewedChunk]);
