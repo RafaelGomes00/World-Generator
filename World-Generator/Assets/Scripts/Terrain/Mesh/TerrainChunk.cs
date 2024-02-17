@@ -69,17 +69,10 @@ public class TerrainChunk
         terrainMeshObject.SetActive(value);
     }
 
-    public void UpdateTerrainChunk(Vector2 viewerPosition, float maxViewDist, Transform viewerTransform)
+    public void UpdateTerrainChunk(Vector2 viewerPosition, float maxViewDist)
     {
         float viewerDistFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
-
-        float dotProduct = Vector3.Dot(viewerTransform.forward.normalized, terrainMeshObject.transform.position - viewerTransform.position);
-        if (dotProduct >= -0.8f)
-        {
-            Debug.DrawLine(viewerTransform.position, terrainMeshObject.transform.position);
-        }
-
-        SetVisible(dotProduct >= -0.5f);
+        SetVisible(viewerDistFromNearestEdge <= maxViewDist);
     }
 
     public bool IsVisible()
